@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>후쿠오카 여행 일정 11/21~23</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbf6ec; --card:#fffdf8; --ink:#3b2f25; --sub:#8a7663; --line:#eadfcd;
+  --accent:#e2725b; --accent-soft:#fbe3dc; --move:#eef4ea; --move-ink:#4f6b43;
+  --star:#fff1c9; --done:#c8bba9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+header{padding:22px 18px 10px;max-width:760px;margin:0 auto}
+h1{font-family:'Gowun Dodum',sans-serif;font-size:1.65rem;margin:0 0 2px}
+.subtitle{color:var(--sub);font-size:.95rem}
+.sticky{position:sticky;top:0;z-index:10;background:var(--bg);padding:8px 14px 10px;border-bottom:1px solid var(--line)}
+.sticky-in{max-width:760px;margin:0 auto}
+.search{display:flex;gap:8px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px 12px}
+.search:focus-within{border-color:var(--accent)}
+.search input{flex:1;border:0;outline:0;background:transparent;font-size:1.05rem;color:var(--ink);font-family:inherit}
+.search button{border:0;background:none;font-size:1.2rem;color:var(--sub);cursor:pointer;display:none}
+.tabs{display:flex;gap:8px;margin-top:10px;overflow-x:auto}
+.tab{flex:1;min-width:92px;border:2px solid var(--line);background:var(--card);border-radius:12px;padding:8px 6px;font-family:inherit;font-size:.95rem;color:var(--ink);cursor:pointer;text-align:center;line-height:1.3}
+.tab b{display:block;font-size:1.05rem}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab .today{font-size:.72rem;background:#fff;color:var(--accent);border-radius:6px;padding:0 5px;margin-left:3px}
+main{max-width:760px;margin:0 auto;padding:14px 14px 80px}
+.hotel{background:var(--accent-soft);border-radius:16px;padding:14px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hotel .t{font-weight:800}
+.hotel .a{font-size:.9rem;color:var(--sub)}
+.day-head{font-family:'Gowun Dodum',sans-serif;font-size:1.3rem;margin:6px 0 12px;line-height:1.4}
+.progress{font-size:.9rem;color:var(--sub);margin:-6px 0 14px}
+.stop{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-bottom:14px;box-shadow:0 2px 0 rgba(120,90,60,.05)}
+.stop.top{border:2px solid #f0c75e;background:linear-gradient(var(--star),var(--card) 60px)}
+.stop.sub{background:transparent;border:2px dashed var(--line);box-shadow:none}
+.tag{display:inline-block;font-size:.75rem;font-weight:800;color:#fff;background:var(--accent);border-radius:6px;padding:0 7px;margin-left:4px;vertical-align:1px}
+.tag-sub{background:#fff;color:var(--sub);border:1px solid var(--line);font-weight:600}
+.filter{display:flex;gap:6px;margin:-6px 0 12px}
+.stop.done{opacity:.55}
+.stop.done .title{text-decoration:line-through;text-decoration-color:var(--done)}
+.row1{display:flex;align-items:flex-start;gap:10px}
+.time{font-weight:800;color:var(--accent);font-size:.95rem;white-space:nowrap}
+.title{font-weight:800;font-size:1.12rem;line-height:1.4;flex:1}
+.chk{width:28px;height:28px;flex:none;border:2px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:#fff}
+.done .chk{background:var(--move-ink);border-color:var(--move-ink)}
+.move{background:var(--move);color:var(--move-ink);border-radius:12px;padding:8px 12px;margin:10px 0;font-size:.95rem}
+ul.notes{margin:8px 0 0;padding-left:20px}
+ul.notes li{margin:4px 0}
+.place{border-top:1px dashed var(--line);margin-top:10px;padding-top:10px}
+.place .pn{font-weight:600}
+.place .addr{font-size:.92rem;color:var(--sub);word-break:break-all}
+.place .pd{font-size:.95rem}
+.btns{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.btn{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:6px 11px;font-size:.88rem;font-family:inherit;color:var(--ink);text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.btn.map{border-color:#9cc3e6;color:#2c5d8a}
+.btn.taxi{border-color:#f0c75e;color:#8a6410}
+mark{background:#ffe48a;color:inherit;border-radius:3px;padding:0 1px}
+.empty{text-align:center;color:var(--sub);padding:40px 0}
+.result-day{font-size:.85rem;color:#fff;background:var(--sub);border-radius:6px;padding:1px 7px;margin-right:6px;vertical-align:2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:3px 11px;font-size:.85rem;color:var(--sub);cursor:pointer;font-family:inherit}
+/* taxi overlay */
+#overlay{position:fixed;inset:0;background:#fffdf8;z-index:50;display:none;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center}
+#overlay.on{display:flex}
+#ov-ask{font-size:1.25rem;color:var(--sub);margin-bottom:18px}
+#ov-name{font-size:1.9rem;font-weight:800;margin-bottom:14px;line-height:1.35}
+#ov-addr{font-size:2.1rem;font-weight:800;line-height:1.4;word-break:break-all}
+#ov-close{margin-top:34px;font-size:1.1rem;padding:12px 28px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 18px;border-radius:20px;font-size:.95rem;opacity:0;transition:.25s;pointer-events:none;z-index:60}
+.toast.on{opacity:1}
+.bar{height:12px;background:var(--line);border-radius:8px;overflow:hidden;margin:-4px 0 8px}
+.bar div{height:100%;background:var(--move-ink);border-radius:8px;transition:width .3s}
+.sec-h{font-weight:800;font-size:1.1rem;margin:18px 0 6px}
+.done-h{margin-top:28px;color:var(--sub);border-top:2px dashed var(--line);padding-top:16px}
+.cat-h{font-weight:600;color:var(--accent);margin:14px 0 6px;font-size:.98rem}
+.cat-h span{background:var(--accent-soft);border-radius:8px;padding:0 7px;font-size:.85rem}
+.ci{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.ci.v{background:transparent;opacity:.6}
+.ci.v .ci-n{text-decoration:line-through;text-decoration-color:var(--done)}
+.vchk{width:32px;height:32px;flex:none;border:2px solid var(--line);border-radius:50%;background:#fff;cursor:pointer;font-size:1.05rem;color:#fff;display:flex;align-items:center;justify-content:center}
+.ci.v .vchk{background:var(--move-ink);border-color:var(--move-ink)}
+.ci-body{flex:1;min-width:0}
+.ci-n{font-weight:600;line-height:1.4}
+.ci-d{font-size:.88rem;color:var(--sub)}
+.ci-cat{font-size:.78rem;color:var(--sub)}
+.ci-map{flex:none;padding:6px 9px}
+.tip{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;margin-top:18px;font-size:.95rem;color:var(--sub)}
+
+/* ---- v3 compact UI ---- */
+html,body{font-size:17px}
+header{padding:18px 16px 6px}
+h1{font-size:1.45rem}
+.subtitle{font-size:.88rem}
+.tab{padding:7px 4px;font-size:.82rem;min-width:70px}
+.tab b{font-size:.98rem}
+.hotel{padding:10px 14px;border-radius:14px;margin-bottom:12px;flex-wrap:nowrap}
+.h-txt{font-size:.95rem}
+.day-head{font-size:1.15rem;margin:4px 0 8px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.toolbar .progress{margin:0}
+.chip{padding:5px 11px}
+.stop{padding:0;border-radius:16px;margin-bottom:10px;overflow:hidden}
+.head{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hl{flex:1;min-width:0}
+.time{font-size:.85rem}
+.title{font-size:1.04rem}
+.peek{font-size:.85rem;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.chev{color:var(--sub);font-size:.9rem;width:14px;text-align:center}
+.body{display:none;padding:0 14px 12px}
+.stop.open .body{display:block}
+.stop.open .head{padding-bottom:6px}
+.stop.sub{margin-left:22px;border:1.5px dashed var(--line);background:rgba(255,255,255,.35)}
+.stop.sub .title{font-size:.95rem;font-weight:600}
+.stop.sub .head{padding:9px 12px}
+.stop.top{background:var(--card);border:2px solid #f0c75e}
+.move{margin:4px 0 8px;font-size:.9rem;padding:7px 11px}
+ul.notes{margin:4px 0 4px;font-size:.93rem}
+.place{display:flex;gap:8px;align-items:center;margin-top:8px;padding-top:8px}
+.p-main{flex:1;min-width:0}
+.place .pn{font-size:.95rem}
+.place .pd{font-size:.85rem;color:var(--sub)}
+.place .addr{font-size:.75rem;opacity:.85;line-height:1.35}
+.ibtns{display:flex;gap:5px;flex:none}
+.ib{width:38px;height:38px;border:1.5px solid var(--line);background:#fff;border-radius:11px;font-size:1.05rem;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;padding:0}
+.ib.map{border-color:#bcd6ee}.ib.taxi{border-color:#f3d98a}
+.cat-h{cursor:pointer;display:flex;align-items:center;gap:6px}
+.cat-h i,.sec-h i{font-style:normal;color:var(--sub);font-size:.8rem;margin-left:auto;font-weight:400}
+.sec-h{display:flex;align-items:center;gap:6px}
+.done-h{cursor:pointer}
+.ci{padding:10px 12px}
+.tip{font-size:.85rem;padding:10px 14px;text-align:center}
+
+/* ---- v4 headline ---- */
+.hline{display:flex;align-items:center;gap:8px;margin-top:4px}
+.hline+.hline{margin-top:6px}
+.kind{flex:none;font-size:.74rem;font-weight:800;border-radius:7px;padding:2px 8px;min-width:46px;text-align:center;background:#eee;color:#555}
+.k-move{background:#e3efdc;color:#4f6b43}
+.k-food{background:#fde3d9;color:#c2553c}
+.k-see{background:#efe4f7;color:#7a4c99}
+.k-shop{background:#efe4f7;color:#7a4c99}
+.k-walk{background:#dff2ef;color:#2f7a6e}
+.k-stay{background:#f6ecd2;color:#8a6a1f}
+.k-train{background:#3b6a96;color:#fff}
+.k-alert{background:#ffe48a;color:#7a5a00}
+.htxt{font-weight:800;font-size:1.05rem;line-height:1.35}
+.time{font-size:.8rem;opacity:.9}
+.stop.sub .htxt{font-size:.93rem;font-weight:700}
+.stop.sub .kind{opacity:.85}
+.memo{font-size:.85rem;color:var(--sub);margin:2px 0 6px}
+.stop.done .htxt{text-decoration:line-through;text-decoration-color:var(--done)}
+.nd{font-weight:500;color:var(--sub);font-size:.9em}
+.stop.done .nd{text-decoration:none}
+.stop.top{border:1px solid var(--line)!important;background:var(--card)!important}
+.st{display:inline-block;font-size:.7rem;font-weight:700;border-radius:6px;padding:0 6px;margin-left:4px;vertical-align:1px}
+.st-ok{background:#e3efdc;color:#4f6b43}
+.st-maybe{background:#eee;color:#888}
+.alt-h{margin-top:14px;padding-top:10px;border-top:2px dashed var(--line);font-weight:700;font-size:.9rem;color:var(--sub)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍜 후쿠오카 여행 일정</h1>
+  <div class="subtitle">2026.11.21(토) ~ 11.23(월·공휴일) · 하카타 · 텐진 · 유후인</div>
+</header>
+
+<div class="sticky"><div class="sticky-in">
+  <div class="search">🔍<input id="q" type="search" placeholder="장소·가게·주소 검색 (예: 치이카와, 라멘, 락커)" autocomplete="off"><button id="clear" aria-label="지우기">✕</button></div>
+  <div class="tabs" id="tabs"></div>
+</div></div>
+
+<main id="main"></main>
+
+<div id="overlay">
+  <div id="ov-ask">ここへ行ってください 🙏</div>
+  <div id="ov-name"></div>
+  <div id="ov-addr"></div>
+  <button class="btn" id="ov-close">닫기</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const HOTEL = {name:"スマイルスマートイン博多", ko:"스마일 스마트 인 하카타", addr:"福岡県福岡市博多区神屋町3-5"};
+
+const DAYS = [
+ {id:"day1", date:"2026-11-21", label:"1일차", sub:"11/21 토",
+  title:"하카타 · 나카스 · 텐진 핵심 쇼핑 데이",
+  stops:[
+   {time:"04:20 ~ 05:45", title:"6004번 첫차로 인천공항 T2",
+    move:"🚌 04:20까지 말미고개 정류장 → 6004번 첫차 → 인천공항 T1 → T2 (약 1시간 15~25분)",
+    notes:["첫차는 문성초 04:25 출발 → 말미고개 04:30쯤 통과","요금 17,000원 · T2는 T1 다음에 내려요","T2 도착 05:40~05:50 예상 → 빠듯하니 진에어 모바일 체크인 미리!","여권 챙기기"],
+    places:[{n:"말미고개 (금천소방서) - 6004번 정류장", ja:"말미고개 금천소방서", a:"말미고개 금천소방서 버스정류장"}]},
+   {time:"06:55 ~ 08:15", top:true, title:"출국 비행기 LJ421",
+    move:"✈️ 인천 06:55 → 후쿠오카 08:15 (진에어 LJ421)",
+    notes:[], places:[]},
+   {time:"08:15 ~ 10:00", tag:"메인", title:"공항 → 하카타역 이동 & 코인락커 보관",
+    move:"🚐 국제선 1층 1번 승강장 무료 셔틀 → 국내선 남쪽 하차 → 🚇 후쿠오카공항역 → 하카타역 (5분 / 260엔) · 총 약 25분",
+    notes:["① 입국 후 1층 도착 로비 밖 1번 승강장 '国内線行き 連絡バス' (무료 · 5~8분 간격 · 10~15분)","② 종점(국내선 남쪽)에서 내려 지하철 표지판 따라 후쿠오카공항역","③ 공항선 2정거장 → 하카타역 (교통카드·컨택리스 카드 OK)","대안: 국제선 2번 승강장 니시테츠 버스로 하카타역 직행 (약 25분)","하카타구치 1층 코인락커 (대형 700~800엔)"],
+    places:[{n:"하카타역", ja:"博多駅", a:"福岡県福岡市博多区博多駅中央街1-1"}]},
+   {time:"10:00 ~ 12:15", tag:"메인", title:"점심 오픈런 — 키와미야 함바그 하카타점",
+    notes:["10:30경 대기 → 11:00 오픈 입장 (평일 점심엔 2시간 대기도 있음)","13:10 커비 카페 전까지 여유롭게 식사"],
+    places:[{n:"키와미야 (하카타점) - 함바그 · 버스터미널 1층 외부", ja:"極味や 博多店", a:"福岡県福岡市博多区博多駅中央街2-1"}]},
+   {time:"10:00 ~ 10:30", tag:"서브 · 시간 여유 시", sub:true, title:"오픈 직후 ~ 줄 서기 전 틈새 쇼핑",
+    notes:[],
+    places:[
+     {n:"포켓몬센터 (후쿠오카) - KITTE 2F", ja:"ポケモンセンターフクオカ", a:"福岡県福岡市博多区博多駅中央街9-1 KITTE博多 2F", d:"10:00~21:00 · 博多マルイ 2F · 후쿠오카 한정 굿즈"},
+     {n:"드림캡슐 (하카타마루이점) - 가챠샵 · KITTE 6F", ja:"ドリームカプセル 博多マルイ店", a:"福岡県福岡市博多区博多駅中央街9-1 KITTE博多 6F", d:"博多マルイ 영업시간(10:00~21:00) 기준 · 신상 가챠"}
+    ]},
+   {time:"12:15 ~ 14:30", tag:"메인", title:"⏰ 13:10 커비 카페 하카타 (예약 확정)",
+    move:"🚶‍♀️ 하카타역 → 캐널시티 도보 10~12분 (850m)",
+    notes:[],
+    places:[{n:"커비 카페 (하카타) - 캐널시티 사우스빌딩 B1F", ja:"カービィカフェ博多 キャナルシティ博多", a:"福岡県福岡市博多区住吉1-2"}]},
+   {time:"12:15 ~ 14:30", tag:"서브 · 선택", sub:true, title:"커비 카페 전후 & 숙소 가는 길",
+    notes:["숙소 가는 길목 쿠시다 신사 & 카와바타 상점가 잠깐 구경"],
+    places:[{n:"반다이 가샤폰 (캐널시티점) - 가챠샵 · 커비 카페 같은 층", ja:"ガシャポンのデパート キャナルシティ博多店", a:"福岡県福岡市博多区住吉1-2", d:"10:00~21:00 · 무휴 · 2,000대 이상"}]},
+   {time:"14:30 ~ 15:30", tag:"메인", title:"캐리어 수령 → 숙소 체크인",
+    move:"🚶‍♀️ 캐널시티 → 하카타역 도보 10분 → 짐 찾고 숙소까지 도보 10~12분 (무거우면 택시 700~800엔)",
+    notes:["15:00 무인 체크인"],
+    places:[{n:"스마일 스마트 인 (하카타) - 숙소", ja:"スマイルスマートイン博多", a:"福岡県福岡市博多区神屋町3-5"}]},
+   {time:"15:30 ~ 16:00", title:"엄마 전당포 1 — 나카스",
+    move:"🚶‍♀️ 숙소 → 나카스 도보 약 8분 · 텐진 가는 길목",
+    notes:["타마야 질점은 18:00에 닫고 일요일 휴무 → 토요일 첫 코스로!","시간 되면 근처 OKURA 나카스점도"],
+    places:[
+     {n:"타마야 질점 - 전통 전당포", ja:"玉屋質店", a:"福岡県福岡市博多区中洲1-4-9", d:"~18:00 · 일요일 휴무 · 구글 평점 5.0"},
+     {n:"OKURA (나카스점) - 명품 리유즈", ja:"OKURA 福岡中洲店", a:"福岡県福岡市博多区中洲3-7-10 若松ビル1F", d:"일요일 휴무"}
+    ]},
+   {time:"16:15 ~ 17:00", title:"[최우선] 빈티지 카메라 — 카메라의 키타무라",
+    move:"🚶‍♀️ 나카스 → 미나 텐진 도보 약 10분",
+    notes:["20:00 마감","🛂 면세용 실물 여권 필수","SD카드·충전기 동시 확인!","같은 건물 7F 미니 가챠샵도"],
+    places:[{n:"카메라의 키타무라 (미나 텐진점) - 빈티지 디카 · 2F", ja:"カメラのキタムラ ミーナ天神", a:"福岡県福岡市中央区天神4-3-8 ミーナ天神 2F"}]},
+   {time:"17:00 ~ 17:50", title:"엄마 명품 리유즈 — 텐진 2초메",
+    move:"🚶‍♀️ 미나 텐진 → 텐진 2초메 도보 약 5분 · 두 곳은 키라메키도리에 붙어 있어요",
+    notes:["둘 다 20:00 마감","나머지(코메효·OKURA 텐진)는 3일차 오전에"],
+    places:[
+     {n:"다이코쿠야 (텐진 본관) - 명품 전당포", ja:"大黒屋 福岡天神本館", a:"福岡県福岡市中央区天神2-10-2", d:"명품 가방·시계·주얼리 · 구글 평점 4.7"},
+     {n:"브랜드 리밸류 (텐진점) - 명품·시계 리유즈", ja:"ブランドリバリュー 福岡天神店", a:"福岡県福岡市中央区天神2-6-13 2F", d:"키라메키도리 2층 · 구글 평점 4.8"}
+    ]},
+   {time:"17:50 ~ 18:45", title:"파르코 — 치이카와 · 커비 굿즈",
+    notes:["B1F 치이카와 포켓 팝업 → 5F 커비 컬러풀 스토어 팝업 → 8F 치이카와 랜드 & 키디랜드","타워레코드·이시바시 악기는 3일차에!","쇼핑 10:00~20:30 · 저녁 먹고 다시 와도 OK"],
+    places:[{n:"파르코 (후쿠오카) - 백화점", ja:"福岡パルコ", a:"福岡県福岡市中央区天神2-11-1", d:"쇼핑 10:00~20:30"}]},
+   {time:"17:50 ~ 18:45", sub:true, title:"인형뽑기 (파르코 바로 근처)",
+    notes:["치이카와·농담곰 인형 뽑기"],
+    places:[
+     {n:"타이토 스테이션 (텐진점) - 오락실", ja:"タイトーステーション 福岡天神店", a:"福岡県福岡市中央区天神2-6-35", d:"밤늦게까지 영업 · 크레인 게임"},
+     {n:"GiGO (텐진) - 오락실", ja:"GiGO 福岡天神", a:"福岡県福岡市中央区天神2-7-6", d:"2F 굿즈숍 fanfancy+ 10:00~22:00"}
+    ]},
+   {time:"19:00 ~ 20:15", title:"와규 야키니쿠 저녁",
+    move:"🚶‍♀️ 파르코 → 다이묘 도보 약 7분 · 18:45 출발",
+    notes:["예약 19:00","토요일 디너 17:00~24:00 · 전 좌석 개인실 · 카드 OK","☎ 092-711-1129"],
+    places:[{n:"쿠라모토 (다이묘 본점) - 와규 야키니쿠", ja:"蔵元 大名本店", a:"福岡県福岡市中央区大名1-2-16 セシオパーク大名"}]},
+   {time:"20:15 ~ 21:20", title:"후쿠오카 타워 야경",
+    move:"🚌 텐진 버스센터 앞 1A 승강장 → 니시테츠 버스 W1 · 302번 (약 15~20분) → 'TNC放送会館前' 또는 '福岡タワー南口' 하차 · 🚕 택시면 약 15분",
+    notes:["9:30~22:00 · ⚠ 마지막 입장 21:30 → 20:45까지 도착 목표","입장료 1,000엔 (Klook 등 온라인 800~900엔)","타워 조명은 23:00까지"],
+    places:[{n:"후쿠오카 타워 - 전망대", ja:"福岡タワー", a:"福岡県福岡市早良区百道浜2-3-26"}]},
+   {time:"21:20 ~ 22:15", title:"크리스마스 일루미네이션",
+    move:"🚕 후쿠오카 타워 → 구 공회당 귀빈관 택시 약 15분",
+    notes:["구 공회당 귀빈관 → 텐진 중앙공원 → 강 건너 나카스 → 숙소 쪽으로 걸으며 구경","조명은 24시까지 · 시청 앞 크리스마스 마켓은 토요일 23시까지"],
+    places:[
+     {n:"구 공회당 귀빈관 - 일루미네이션", ja:"旧福岡県公会堂貴賓館", a:"旧福岡県公会堂貴賓館", d:"산타 축제 FESTA de SANTA (11/11~12/25) · 조명 24시까지"},
+     {n:"후쿠오카 시청 - 크리스마스 마켓", ja:"福岡市役所", a:"福岡県福岡市中央区天神1-8-1", d:"토요일 12:00~23:00"}
+    ]},
+   {time:"22:15 ~ 22:30", title:"숙소로",
+    move:"🚶‍♀️ 나카스 → 숙소 도보 약 10분 · 피곤하면 택시",
+    notes:["가는 길 편의점에서 야식","다음 날 06:50 출발이니 일찍 자기!"],
+    places:[{n:"숙소 - 스마일 스마트 인 하카타", ja:"スマイルスマートイン博多", a:"福岡県福岡市博多区神屋町3-5"}]}
+  ]},
+ {id:"day2", date:"2026-11-22", label:"2일차", sub:"11/22 일",
+  title:"유후인 온천마을 & 하카타 복귀",
+  stops:[
+   {time:"06:50 ~ 07:05", title:"숙소 → 하카타역",
+    move:"🚶‍♀️ 도보 12~15분 · 늦으면 택시 5분 (700~800엔)",
+    notes:["수건 · JR 티켓 챙기기"],
+    places:[{n:"하카타역", ja:"博多駅", a:"福岡県福岡市博多区博多駅中央街1-1"}]},
+   {time:"07:10 ~ 07:35", title:"아침 구매 → 승강장",
+    notes:["미뇽은 카드 X (교통카드·현금)","07:35까지 승강장으로!"],
+    places:[{n:"일 포르노 델 미뇽 (하카타역) - 미니 크루아상 · 중앙 개찰구 앞", ja:"イルフォルノデルミニョン 博多駅", a:"福岡県福岡市博多区博多駅中央街1-1 博多駅"}]},
+   {time:"07:43 ~ 10:02", top:true, title:"JR 특급 하카타 → 유후인",
+    move:"🚆 07:43 하카타 출발 → 10:02 유후인 도착 (약 2시간 20분)",
+    notes:["🎫 예약한 JR 티켓 확인"],
+    places:[{n:"유후인역", ja:"由布院駅", a:"大分県由布市湯布院町川北8-2"}]},
+   {time:"10:05 ~ 10:20", title:"유후인역 → 무소엔 (택시)",
+    move:"🚕 역 앞 택시 5~7분 · 약 1,000엔",
+    notes:[],
+    places:[{n:"무소엔 (야마노호텔) - 온천", ja:"山のホテル夢想園", a:"大分県由布市湯布院町川南1243"}]},
+   {time:"10:20 ~ 13:30", top:true, title:"무소엔 온천 (노천탕·가족탕)",
+    notes:["1인 1,000엔 · 가족탕 무료 (선착순)","수건 챙기기 (현장 판매 300엔)","배고프면 전망 카페 BanBan 푸딩 🍮","☎ 0977-84-2171"],
+    places:[{n:"무소엔 (야마노호텔) - 온천", ja:"山のホテル夢想園", a:"大分県由布市湯布院町川南1243"}]},
+   {time:"13:30 ~ 13:40", title:"무소엔 → 라멘 사무라이 (택시)",
+    move:"🚕 프런트에서 택시 호출 (タクシーを呼んでください) · 유후인역 쪽으로 약 5~7분",
+    notes:[], places:[]},
+   {time:"13:40 ~ 14:30", title:"점심 — 라멘 사무라이 (돈코츠 라멘)",
+    notes:["⚠ 영업시간이 사이트마다 달라요: 10:30~21:00 (쉬는 시간 없음) / 11:00~14:00 · 18:00~ (점심 14시 마감) → 14시 전에 들어가기!","목요일 휴무라는 정보도 있음 (가는 날은 일요일이라 OK)","식권기 현금만 · 사람 적은 시간은 15시 이후","인기 메뉴: 라멘+교자+차슈동 세트 '侍湯布膳'","☎ 0977-76-5232"],
+    places:[{n:"라멘 사무라이 (유후인) - 돈코츠 라멘", ja:"ラーメン侍", a:"大分県由布市湯布院町川上3056-1 モトヤマビル1F", d:"유후인역 도보 3~4분 · 유후미도리 길가"}]},
+   {time:"14:30 ~ 15:00", title:"유노츠보 거리 → 긴린코",
+    move:"🚶‍♀️ 라멘집 앞 유후미도리 → 유노츠보 거리 → 긴린코 일직선 (약 1.5km · 25분)",
+    notes:["스누피 차야, 지브리 숍(동구리노모리), 미피 숍, 유후인 플로랄 빌리지"],
+    places:[{n:"유노츠보 요코초 - 꼬치·어묵 핫바", ja:"湯の坪横丁", a:"大分県由布市湯布院町川上1524"}]},
+   {time:"15:00 ~ 15:40", title:"긴린코 호수 산책",
+    notes:["호수 둘레길 & 물 위 텐소 신사 도리이","📷 빈티지 디카 촬영"],
+    places:[{n:"긴린코 호수", ja:"金鱗湖", a:"大分県由布市湯布院町川上1561-1"}]},
+   {time:"15:40 ~ 16:50", title:"긴린코 → 유후인역 (간식 먹으며)",
+    move:"🚶‍♀️ 같은 길로 도보 약 25분 · 힘들면 택시 약 5분",
+    notes:["올 때 못 본 가게·간식 위주로","⏰ 16:50까지 유후인역 도착!"],
+    places:[{n:"유후인역", ja:"由布院駅", a:"大分県由布市湯布院町川北8-2"}]},
+   {time:"14:30 ~ 16:50", sub:true, title:"간식 스팟 (골라 먹기)",
+    notes:["금상 고로케, 미르히 치즈케이크(10:30~17:30), B-speak 롤케이크 (역 근처)","대부분 17시쯤 닫아요 → 16:50까지 역으로"],
+    places:[
+     {n:"유라리 - 정원 카페 · 수제 푸딩", ja:"ゆらり", a:"大分県由布市湯布院町川上3037-12", d:"유후인 가게는 대부분 17시쯤 마감"},
+     {n:"Bread, Espresso & (유후인) - 카페 · 대안", ja:"Bread, Espresso & 湯布院", a:"大分県由布市湯布院町川上1524-1", d:"유노츠보 요코초 안"},
+     {n:"유후인41타케부 - 숯불 표고버섯·치즈구이", ja:"ゆふいん41たけぶ", a:"大分県由布市湯布院町川上1540-4", d:"스누피 차야 옆"}
+    ]},
+   {time:"17:17 ~ 19:27", top:true, title:"JR 특급 유후인 → 하카타",
+    move:"🚆 17:17 유후인 출발 → 19:27 하카타 도착",
+    notes:["🎫 복귀 티켓 확인"],
+    places:[]},
+   {time:"19:30 ~ 21:00", title:"저녁 — 스시사카바 사시스",
+    notes:["예약 불가 → 하카타역 도착하자마자 현장 웨이팅 등록!","하카타역 KITTE B1F · 역에서 바로","기다리는 동안 같은 건물 포켓몬센터 구경 (아래 카드)"],
+    places:[{n:"스시사카바 사시스 (KITTE 하카타점) - 스시", ja:"寿司さかば さしす KITTE博多店", a:"福岡県福岡市博多区博多駅中央街9-1 KITTE博多 B1F"}]},
+   {time:"19:30 ~ 21:00", sub:true, title:"웨이팅 중 구경 — 博多マルイ (같은 건물)",
+    notes:["포켓몬센터·드림캡슐 모두 21:00 마감 → 밥 먹기 전에!"],
+    places:[
+     {n:"포켓몬센터 (후쿠오카) - 博多マルイ 2F", ja:"ポケモンセンターフクオカ", a:"福岡県福岡市博多区博多駅中央街9-1 博多マルイ 2F", d:"10:00~21:00 · 후쿠오카 한정 굿즈"},
+     {n:"드림캡슐 (하카타마루이점) - 가챠샵 · 6F", ja:"ドリームカプセル 博多マルイ店", a:"福岡県福岡市博多区博多駅中央街9-1 博多マルイ 6F", d:"博多マルイ 영업시간 10:00~21:00 기준"}
+    ]},
+   {time:"21:00 ~ 22:00", sub:true, title:"하카타역 구경 (체력 남으면)",
+    notes:["아뮤플라자는 20:00 마감이라 패스"],
+    places:[
+     {n:"요도바시카메라 (하카타) - 카메라·가전·장난감·가챠", ja:"ヨドバシカメラ マルチメディア博多", a:"ヨドバシカメラ マルチメディア博多", d:"9:30~22:00 · 하카타역 지쿠시구치 1분 · 카메라 매장도 구경"},
+     {n:"반다이 가샤폰 (버스터미널점) - 가챠샵 · 7F", ja:"ガシャポンのデパート 博多バスターミナル店", a:"福岡県福岡市博多区博多駅中央街2-1 博多バスターミナル 7F", d:"800대 · 하카타역 하카타구치 바로 앞"}
+    ]},
+   {time:"22:00 ~", title:"숙소 귀가",
+    move:"🚶‍♀️ 하카타역 → 숙소 도보 10~12분 · 피곤하면 택시 700~800엔",
+    notes:[], places:[{n:"숙소 - 스마일 스마트 인 하카타", ja:"スマイルスマートイン博多", a:"福岡県福岡市博多区神屋町3-5"}]}
+  ]},
+ {id:"day3", date:"2026-11-23", label:"3일차", sub:"11/23 월",
+  title:"텐진 마무리 · 귀국",
+  stops:[
+   {time:"08:30 ~ 09:00", tag:"메인", title:"체크아웃 → 텐진 코인락커",
+    move:"🚇 숙소 → 나카스카와바타역 도보 6~7분 → 지하철 1정거장 텐진역 (2분 / 210엔)",
+    notes:["텐진역 개찰구 인근 / 솔라리아 스테이지 / 텐진 지하가 코인락커 (대형 700~800엔)"],
+    places:[]},
+   {time:"09:00 ~ 09:45", title:"아침 — 야요이켄 (생선구이 정식)",
+    notes:["9:00 오픈 (~23:00) · 텐진역 도보 1분","식권기 주문 · 밥 리필 무료"],
+    places:[{n:"야요이켄 (텐진2초메점) - 생선구이 정식", ja:"やよい軒 天神2丁目店", a:"やよい軒 天神2丁目店"}]},
+   {time:"10:00 ~ 11:00", title:"[필수] 타워레코드 · 이시바시 악기 (파르코)",
+    notes:["6F 타워레코드 — J-POP·밴드 음반, 한정 굿즈","8F 이시바시 악기 — 🥁 드럼 스틱","파르코 10:00 오픈 · 5,500엔 이상 면세"],
+    places:[{n:"파르코 (후쿠오카) - 타워레코드 6F · 이시바시 악기 8F", ja:"福岡パルコ", a:"福岡県福岡市中央区天神2-11-1", d:"쇼핑 10:00~20:30"}]},
+   {time:"11:00 ~ 12:40", title:"엄마 명품 리유즈 2 — 코메효 · OKURA",
+    notes:["전부 11:00 오픈 · 20:00 마감","시간 남으면 2nd STREET(다이묘)도"],
+    places:[
+     {n:"코메효 (텐진점) - 명품 리유즈", ja:"コメ兵 福岡天神店", a:"福岡県福岡市中央区天神2-3-39", d:"일본 최대 브랜드 리유즈 · 감정 까다로워 상태 좋음 · 구글 평점 4.8"},
+     {n:"코메효 (다이묘) - 명품 리유즈 2층 매장", ja:"KOMEHYO 福岡天神", a:"福岡県福岡市中央区大名1-12-60", d:"구역별 진열이 깔끔 · 구글 평점 4.9"},
+     {n:"OKURA (텐진점) - 명품·시계·주얼리", ja:"OKURA 福岡天神店", a:"福岡県福岡市中央区今泉1-21-10", d:"1·2층 대형 매장 · 백화점처럼 깔끔 · 구글 평점 5.0"},
+     {n:"2nd STREET (텐진 2호점) - 중고 명품·빈티지 의류", ja:"セカンドストリート福岡天神2号店", a:"福岡県福岡市中央区大名2-1-4", d:"21:00까지 · ⚠ 솔라리아 1호점은 매입 전용이라 2호점으로!"}
+    ]},
+   {time:"13:00 ~ 14:00", tag:"메인 1", title:"점심 — 히츠마부시 빈쵸 (장어덮밥)",
+    move:"🚇 텐진 → 나카스카와바타역 1정거장 (2분 / 210엔) · 7번 출구 1분 · 걸어도 약 12분",
+    notes:["런치 11:30~15:00 (L.O. 14:30) · 무휴","하카타자 건물 1층 · 개인실 있음 · 카드 OK"],
+    places:[{n:"히츠마부시 빈쵸 (나카스카와바타점) - 장어덮밥", ja:"ひつまぶし 和食備長 中洲川端店", a:"福岡県福岡市博多区下川端2-1 博多座西銀ビル1F"}]},
+   {time:"14:15 ~ 15:45", title:"[필수] 드럭스토어",
+    move:"🚇 나카스카와바타 → 텐진 1정거장 (2분) · 걸어도 약 12분",
+    notes:["면세는 매장당 5,000엔 이상 → 한 곳에 몰아서 결제","다이코쿠 vs 마츠키요 가격 비교 · 영수증 보관","산 건 바로 코인락커 캐리어에 넣기 · 시간 더 필요하면 16시 넘어서까지 OK"],
+    places:[
+     {n:"다이코쿠 드럭 (텐진 지하상가) - 드럭스토어 · 텐진빌딩 쪽", ja:"ダイコクドラッグ 天神", a:"福岡県福岡市中央区天神2-12-1 B1F", d:"공휴일 10:00~22:00 · 싸고 한국인 직원"},
+     {n:"마츠모토키요시 (텐진) - 드럭스토어", ja:"マツモトキヨシ 天神", a:"マツモトキヨシ 天神", d:"미나 텐진점 · 텐진 지하가점 등 · 쿠폰 검색"},
+     {n:"선드럭 (텐진 니시도리점) - 드럭스토어", ja:"サンドラッグ 天神西通り店", a:"福岡県福岡市中央区天神2-8-22", d:"10:00~23:00 · 덜 붐빔"}
+    ]},
+   {time:"15:45 ~ 16:45", tag:"메인 1", title:"코인락커 짐 수령 → 공항 이동",
+    move:"🚇 텐진역 → 후쿠오카공항역(국내선) 환승 없이 11분 (260엔)",
+    notes:["🛂 면세 물품(명품·디카)은 기내용 가방에 분리!"],
+    places:[]},
+   {time:"16:45 ~ 20:05", tag:"메인 2", top:true, title:"국내선 치이카와 굿즈 → 국제선 → ✈️ 20:05 탑승",
+    move:"🚐 국내선 1층 남쪽 셔틀 승강장 → 국제선 무료 연결버스 (5~8분 간격 · 10~15분)",
+    notes:["국내선 2·3층 기념품 숍(ANA FESTA 등, 약 20분) — 공항 한정 치이카와","① 국제선 3층 세관 키오스크 반출 확인","② 수하물 위탁 & 출국 심사","③ 면세 구역 소비세 환불 수령","④ 라운지 식사·휴식 → 20:05 탑승 (LJ462)"],
+    places:[
+     {n:"후쿠오카 공항 (국내선)", ja:"福岡空港 国内線", a:"福岡県福岡市博多区下臼井778-1"},
+     {n:"후쿠오카 공항 (국제선)", ja:"福岡空港 国際線", a:"福岡県福岡市博多区青木739"}
+    ]},
+   {time:"21:35 ~ 23:00", tag:"메인 3", title:"인천공항 도착 → 금천구 귀가",
+    move:"🚌 6004번 공항리무진 (17,000원 / 1시간~1시간 15분)",
+    notes:["말미고개·독산동고개 정류장 하차"], places:[]}
+  ]}
+];
+
+
+const HEADS={
+ day1:[
+  [["이동","말미고개 → 인천공항 T2 - 6004번 첫차"]],
+  [["출국","인천 06:55 → 후쿠오카 08:15 - LJ421"]],
+  [["이동","후쿠오카공항 → 하카타역"],["짐 보관","하카타역 코인락커"]],
+  [["점심","키와미야 (하카타점) - 함바그"]],
+  [["구경","포켓몬센터 · 드림캡슐"]],
+  [["구경","커비 카페 (하카타)"],["예약","13:10"]],
+  [["구경","반다이 가샤폰 · 쿠시다 신사"]],
+  [["이동","하카타역 - 캐리어 수령"],["체크인","하카타역 → 숙소"]],
+  [["쇼핑","타마야 질점 (나카스) - 엄마 전당포"]],
+  [["쇼핑","카메라의 키타무라 (미나 텐진점) - 빈티지 디카"]],
+  [["쇼핑","다이코쿠야 · 브랜드 리밸류 - 엄마 명품"]],
+  [["쇼핑","파르코 - 치이카와 · 커비"]],
+  [["구경","타이토 · GiGO - 인형뽑기"]],
+  [["저녁","쿠라모토 (다이묘 본점) - 와규 야키니쿠"],["예약","19:00"]],
+  [["구경","후쿠오카 타워 - 야경"]],
+  [["구경","구 공회당 귀빈관 · 나카스 - 일루미네이션"]],
+  [["귀가","나카스 → 숙소"]]
+ ],
+ day2:[
+  [["이동","숙소 → 하카타역 - 06:50 출발"]],
+  [["아침","미뇽 · 에키벤 - 기차에서 먹을 아침"]],
+  [["기차","하카타 07:43 → 유후인 10:02"]],
+  [["이동","유후인역 → 무소엔 - 택시"]],
+  [["온천","무소엔 - 노천탕·가족탕"]],
+  [["이동","무소엔 → 라멘 사무라이 - 택시"]],
+  [["점심","라멘 사무라이 (유후인) - 돈코츠 라멘"]],
+  [["구경","유노츠보 거리 → 긴린코"]],
+  [["산책","긴린코 호수"]],
+  [["구경","긴린코 → 유후인역"]],
+  [["간식","유노츠보 간식 스팟"]],
+  [["기차","유후인 17:17 → 하카타 19:27"]],
+  [["저녁","스시사카바 사시스 (KITTE 하카타점) - 스시"]],
+  [["구경","포켓몬센터 · 드림캡슐 - 웨이팅 중"]],
+  [["구경","요도바시카메라 · 반다이 가샤폰"]],
+  [["귀가","하카타역 → 숙소"]]
+ ],
+ day3:[
+  [["체크아웃","숙소 → 텐진 코인락커"]],
+  [["아침","야요이켄 (텐진2초메점) - 생선구이 정식"]],
+  [["쇼핑","타워레코드 · 이시바시 악기 (파르코)"]],
+  [["쇼핑","코메효 · OKURA (텐진) - 엄마 명품"]],
+  [["점심","히츠마부시 빈쵸 (나카스카와바타점) - 장어덮밥"]],
+  [["쇼핑","드럭스토어 - 다이코쿠 · 마츠키요 · 선드럭"]],
+  [["이동","짐 찾기 → 후쿠오카 공항"]],
+  [["공항","공항 - 치이카와 굿즈 · 면세 환급"],["출국","후쿠오카 20:05 → 인천 21:35 - LJ462"]],
+  [["귀가","인천공항 T2 → 금천구 - 6004번 리무진"]]
+ ]};
+DAYS.forEach(d=>d.stops.forEach((s,i)=>{ s.heads=((HEADS[d.id]&&HEADS[d.id][i])||[["",s.title]]).map(([k,t])=>[({"아침":"식사","점심":"식사","저녁":"식사","귀가":"이동","산책":"구경","선택":"구경","공항":"쇼핑"})[k]||k,t]); }));
+
+const FOOD={
+ "점심 오픈런 — 키와미야 함바그 하카타점":{st:"확정",alts:[
+   {n:"博多阪急 (B1F) - 푸드코트·식품관", a:"福岡県福岡市博多区博多駅中央街1-1 博多阪急 B1F", d:"하카타역 바로 · 줄 없이 빨리"},
+   {n:"名代ラーメン亭 (博多駅地下街店) - 하카타 라멘", a:"名代ラーメン亭 博多駅地下街店", d:"아침 9시부터 · 하카타역 지하"},
+   {n:"大福うどん (博多1番街店) - 우동", a:"大福うどん 博多1番街店", d:"아침 7시부터 · 하카타역 지하"}]},
+ "와규 야키니쿠 저녁":{st:"확정",alts:[
+   {n:"ホルモン焼肉 ぶち (博多大名店) - 호르몬 야키니쿠", a:"ホルモン焼肉 ぶち 博多大名店", d:"17:00~24:00 · 텐진역 3분 · 카드 OK"},
+   {n:"焼肉どんどん (博多大名店) - 야키니쿠", a:"焼肉どんどん 博多大名店", d:"18:00~새벽 5:00 · 연중무휴"},
+   {n:"元祖もつ鍋 楽天地 (天神大名店) - 모츠나베", a:"福岡県福岡市中央区大名1-11-4 どんぱビル2F", d:"17:00~24:00 · 한국어 메뉴"}]},
+ "아침 구매 → 승강장":{st:"확정",alts:[
+   {n:"DACOMECCA - 베이커리", a:"DACOMECCA 博多", d:"하카타역 3분 · 아침부터 줄 · 오픈 시간 확인"},
+   {n:"大福うどん (博多1番街店) - 우동", a:"大福うどん 博多1番街店", d:"아침 7시부터 · 하카타역 지하"}]},
+ "점심 — 라멘 사무라이 (돈코츠 라멘)":{st:"확정",alts:[
+   {n:"地鶏ラーメン 福助 - 지도리 라멘", a:"大分県由布市湯布院町川上3052-3", d:"라멘 사무라이 근처 · 담백한 닭 육수"},
+   {n:"ゆふいんバーガーハウス - 분고규 버거", a:"大分県由布市湯布院町川上3050-2", d:"11:00~17:00 (품절 시 종료) · 역 5분"}]},
+ "저녁 — 스시사카바 사시스":{st:"확정",alts:[
+   {n:"すし酒場 さしす (博多マイング店) - 스시", a:"すし酒場さしす 博多マイング店", d:"같은 가게 다른 지점 · 하카타역 2분"},
+   {n:"寿司 博多魚がし (博多1番街店) - 스시", a:"福岡県福岡市博多区博多駅中央街1-1 博多1番街 B1F", d:"11:30~21:30 (L.O. 21:00) · 카드 OK"},
+   {n:"羽田市場 (博多駅地下街店) - 스시", a:"羽田市場 博多駅地下街店", d:"11:00~22:00 · 무휴"}]},
+ "아침 — 야요이켄 (생선구이 정식)":{st:"확정",alts:[
+   {n:"키스이마루 (텐진점) - 일본식 아침 정식", a:"福岡県福岡市中央区天神2-11-3 ソラリアステージビル B2F", d:"7:30~ · 명란 무한리필 · 코인락커 바로 근처"},
+   {n:"おにぎりごりちゃん (福岡店) - 주먹밥", a:"おにぎりごりちゃん 福岡", d:"7:00~18:00 · 텐진미나미역 6분"}]},
+ "점심 — 히츠마부시 빈쵸 (장어덮밥)":{st:"확정",alts:[
+   {n:"うなぎ処 柳川屋 (博多店) - 장어 세이로무시", a:"うなぎ処 柳川屋 博多店", d:"11:00~ · 구시다진자마에역 근처"},
+   {n:"うなぎ三代目 源内 - 우나쥬", a:"福岡県福岡市中央区天神3-15-1 フルール天神1F", d:"11:00~15:00 · 텐진"}]},
+ "국내선 치이카와 굿즈 → 국제선 → ✈️ 20:05 탑승":{st:"후보",alts:[
+   {n:"HAKATA FOOD HALL (국제선 3F) - 푸드코트", a:"福岡県福岡市博多区青木739 福岡空港国際線 3F", d:"약 300석 · 모츠나베 楽天地, 해산물 덮밥 등"},
+   {n:"ラーメン滑走路 (국내선 3F) - 라멘 거리", a:"福岡県福岡市博多区下臼井778-1 福岡空港国内線 3F", d:"치이카와 굿즈 사러 갈 때 같이"}]}
+};
+DAYS.forEach(d=>d.stops.forEach(s=>{ const f=FOOD[s.title]; if(f){ s.st=f.st; s.alts=f.alts; } }));
+const KIND={"이동":"k-move","짐 보관":"k-move","귀가":"k-move","체크인":"k-stay","체크아웃":"k-stay",
+ "아침":"k-food","점심":"k-food","저녁":"k-food","간식":"k-food",
+ "구경":"k-see","쇼핑":"k-shop","산책":"k-walk","온천":"k-walk","예약":"k-alert","공항":"k-move","출국":"k-alert","선택":"k-see","기차":"k-alert","식사":"k-food"};
+const A = { // 자주 쓰는 주소
+ parco:"福岡県福岡市中央区天神2-11-1", amu:"福岡県福岡市博多区博多駅中央街1-1 アミュプラザ博多", canal:"福岡県福岡市博多区住吉1-2",
+ kitte:"福岡県福岡市博多区博多駅中央街9-1 KITTE博多", hakata:"福岡県福岡市博多区博多駅中央街1-1", yufu:"大分県由布市湯布院町川上"
+};
+const CHECK = [
+ {cat:"👩 엄마가 가고 싶은 곳", items:[
+  {id:"m5", n:"타마야 질점 (나카스) - 전통 전당포", d:"1일차 · 18시 마감 · 일요일 휴무", a:"福岡県福岡市博多区中洲1-4-9"},
+  {id:"m1", n:"OKURA (나카스점) - 명품 리유즈", d:"1일차 · 일요일 휴무", a:"福岡県福岡市博多区中洲3-7-10 若松ビル1F"},
+  {id:"m6", n:"다이코쿠야 (텐진 본관) - 명품 전당포", d:"1일차 · 20시 마감", a:"福岡県福岡市中央区天神2-10-2"},
+  {id:"m7", n:"브랜드 리밸류 (텐진점) - 명품·시계", d:"1일차 · 키라메키도리 2층", a:"福岡県福岡市中央区天神2-6-13 2F"},
+  {id:"m8", n:"코메효 (텐진점) - 명품 리유즈", d:"3일차 · 11시 오픈", a:"福岡県福岡市中央区天神2-3-39"},
+  {id:"m9", n:"코메효 (다이묘) - 명품 리유즈", d:"3일차 · 11시 오픈", a:"福岡県福岡市中央区大名1-12-60"},
+  {id:"m10", n:"OKURA (텐진점) - 명품·시계·주얼리", d:"3일차 · 11시 오픈", a:"福岡県福岡市中央区今泉1-21-10"},
+  {id:"m11", n:"2nd STREET (텐진 2호점) - 중고 명품·빈티지", d:"3일차 · 21시까지", a:"福岡県福岡市中央区大名2-1-4"},
+  {id:"m3", n:"무소엔 (야마노호텔) - 온천", d:"2일차 · 1인 1,000엔 · 가족탕 무료 · 접수 14시까지", a:"大分県由布市湯布院町川南1243"}
+ ]},
+ {cat:"🙋‍♀️ 내가 가고 싶은 곳", items:[
+  {id:"b1", n:"카메라의 키타무라 (미나 텐진점) - 빈티지 디카", d:"카시오 빈티지 디카 · 여권 필수", a:"福岡県福岡市中央区天神4-3-8 ミーナ天神 2F"},
+  {id:"b2", n:"타워레코드 (파르코점) - 음반 · 6F", d:"3일차 필수", d:"J-POP·밴드 음반, 한정 굿즈", a:A.parco},
+  {id:"b3", n:"타워레코드 (아뮤플라자 하카타점) - 음반 · 7F", a:A.amu},
+  {id:"b4", n:"이시바시 악기 (파르코점) - 악기 · 8F", d:"드럼 스틱", a:A.parco},
+  {id:"b5", n:"시마무라 악기 (아뮤플라자 하카타점) - 악기 · 7F", d:"드럼 스틱", a:A.amu}
+ ]},
+ {cat:"🧸 캐릭터 굿즈 & 팝업", items:[
+  {id:"g1", n:"커비 카페 (하카타) - 캐널시티 사우스빌딩 B1F", d:"예약 완료 · 13:10", a:A.canal},
+  {id:"g2", n:"포켓몬센터 (후쿠오카) - KITTE 2F", a:A.kitte+" 2F"},
+  {id:"g3", n:"치이카와 포켓 팝업 (파르코) - B1F", a:A.parco},
+  {id:"g4", n:"커비 컬러풀 스토어 팝업 (파르코) - 5F", a:A.parco},
+  {id:"g5", n:"치이카와 랜드 & 키디랜드 (파르코) - 8F", a:A.parco},
+  {id:"g6", n:"ANA FESTA 등 (공항 국내선) - 기념품 숍", d:"공항 한정 비행기 치이카와 굿즈", a:"福岡県福岡市博多区下臼井778-1"}
+ ]},
+ {cat:"🕹️ 오락실 & 가챠", items:[
+  {id:"o1", n:"반다이남코 크로스 스토어 (캐널시티) - 가챠·크레인", d:"초대형 가챠 존·크레인", a:A.canal},
+  {id:"o2", n:"타이토 스테이션 (텐진점) - 오락실", a:"福岡県福岡市中央区天神2-6-35"},
+  {id:"o3", n:"GiGO (텐진) - 오락실 · 타이토 맞은편", d:"치이카와·농담곰 인형 뽑기", a:"福岡県福岡市中央区天神2-7-6"},
+  {id:"o4", n:"요도바시카메라 (하카타) - 가챠 · B1F", d:"22:00 마감", a:"ヨドバシカメラ マルチメディア博多"},
+  {id:"o5", n:"드림캡슐 (하카타마루이점) - 가챠샵 · KITTE 6F", d:"신상 가챠샵", a:"福岡県福岡市博多区博多駅中央街9-1 KITTE博多 6F"},
+  {id:"o6", n:"반다이 가샤폰 (캐널시티점) - 가챠샵 · B1F", a:A.canal},
+  {id:"o7", n:"반다이 가샤폰 (버스터미널점) - 가챠샵 · 7F", d:"800대+ 초대형 · 22:30 마감", a:"福岡県福岡市博多区博多駅中央街2-1 博多バスターミナル 7F"},
+  {id:"o8", n:"C-pla (아뮤플라자점) - 가챠샵 · 8F", d:"20:00 마감", a:A.amu},
+  {id:"o9", n:"C-pla (텐진 니시도리점) - 가챠샵", d:"23시 마감", a:"C-pla 天神西通り"},
+  {id:"o10", n:"미나 텐진 미니 가챠샵 - 7F", a:"福岡県福岡市中央区天神4-3-8 ミーナ天神 7F"},
+  {id:"o11", n:"가샤코코 (솔라리아 스테이지점) - 가챠샵 · 2F", a:"福岡県福岡市中央区天神2-11-3 ソラリアステージ 2F"}
+ ]},
+ {cat:"💊 드럭스토어", items:[
+  {id:"d1", n:"돈키호테 (텐진 니시도리점)", d:"1일차 밤 · 덜 붐빔", a:"ドン・キホーテ 天神西通り店"},
+  {id:"d2", n:"돈키호테 (텐진 본점)", d:"24시간", a:"福岡県福岡市中央区今泉1-20-17"},
+  {id:"d3", n:"다이코쿠 드럭 (텐진 지하상가)", d:"3일차 오전 · 싸고 한국인 직원", a:"福岡県福岡市中央区天神2-12-1 B1F"},
+  {id:"d4", n:"마츠모토키요시 (텐진)", d:"3일차 오전 · 쿠폰", a:"マツモトキヨシ 天神"},
+  {id:"d5", n:"선드럭 (텐진 니시도리점)", d:"3일차 오전 · 여유로움", a:"福岡県福岡市中央区天神2-8-22"}
+ ]},
+ {cat:"🍽️ 식당 & 마트", items:[
+  {id:"f1", n:"키와미야 (하카타점) - 함바그", d:"1일차 점심", a:"福岡県福岡市博多区博多駅中央街2-1"},
+  {id:"f2", n:"쿠라모토 (다이묘 본점) - 와규 야키니쿠", d:"1일차 저녁 · 예약 추천", a:"福岡県福岡市中央区大名1-2-16 セシオパーク大名"},
+  {id:"f3", n:"이온 쇼퍼즈 (텐진) - 마트", d:"1일차 야식 · 또는 돈키호테 · 할인 초밥·간식", a:"福岡県福岡市中央区天神4-4-11"},
+  {id:"f10", n:"미츠코시 (후쿠오카) - B2F 식품관", d:"1일차 야식 (선택) · 20:00 마감 · 과일·초밥 · 보냉제 요청", a:"福岡三越"},
+  {id:"f4", n:"일 포르노 델 미뇽 (하카타역) - 미니 크루아상", d:"2일차 아침 · 에키벤도 같이 · 하카타역 1층", a:A.hakata},
+  {id:"f5", n:"라멘 사무라이 (유후인) - 돈코츠 라멘", d:"2일차 점심 · 현금만", a:"大分県由布市湯布院町川上3056-1 モトヤマビル1F"},
+  {id:"f6", n:"스시사카바 사시스 (KITTE 하카타점) - 스시", d:"2일차 저녁", a:A.kitte+" B1F"},
+  {id:"f7", n:"야요이켄 (텐진2초메점) - 생선구이 정식", d:"3일차 아침 · 9시 오픈", a:"やよい軒 天神2丁目店"},
+  {id:"f8", n:"히츠마부시 빈쵸 (나카스카와바타점) - 장어덮밥", d:"3일차 점심", a:"福岡県福岡市博多区下川端2-1 博多座西銀ビル1F"},
+  {id:"f9", n:"공항 라운지 (국제선)", d:"3일차 저녁", a:"福岡県福岡市博多区青木739"}
+ ]},
+ {cat:"🌿 구경할 곳 & 간식", items:[
+  {id:"s1", n:"긴린코 호수", d:"둘레길 & 텐소 신사 도리이", a:"大分県由布市湯布院町川上1561-1"},
+  {id:"s2", n:"유노츠보 거리 & 요코초 - 꼬치·어묵 핫바", d:"꼬치·어묵 핫바", a:"大分県由布市湯布院町川上1524"},
+  {id:"s3", n:"스누피 차야 (유후인점)", a:"スヌーピー茶屋 由布院店"},
+  {id:"s4", n:"동구리노모리 (유후인) - 지브리 숍", a:"どんぐりの森 湯布院店"},
+  {id:"s5", n:"플로랄 빌리지 (유후인)", a:"湯布院フローラルヴィレッジ"},
+  {id:"s6", n:"유라리 - 수제 푸딩 카페", a:"大分県由布市湯布院町川上3037-12"},
+  {id:"s7", n:"유후인41타케부 - 표고버섯·치즈구이", a:"大分県由布市湯布院町川上1540-4"},
+  {id:"s8", n:"금상 고로케 (유후인)", a:"金賞コロッケ 由布院"},
+  {id:"s9", n:"미르히 (유후인) - 치즈케이크", a:"ミルヒ 由布院"},
+  {id:"s10", n:"B-speak (유후인) - 롤케이크", a:"B-speak 由布院"},
+  {id:"s12", n:"쿠시다 신사 & 카와바타 상점가", d:"1일차 이동 길목", a:"櫛田神社 福岡"},
+  {id:"s13", n:"텐진 지하가", d:"3일차 쇼핑", a:"天神地下街"},
+  {id:"s14", n:"크리스마스 일루미네이션 - 구 공회당 귀빈관 · 나카스", d:"1일차 밤 · 24시까지", a:"旧福岡県公会堂貴賓館"},
+  {id:"s15", n:"후쿠오카 타워 - 야경 전망대", d:"1일차 밤 · 마지막 입장 21:30", a:"福岡県福岡市早良区百道浜2-3-26"}
+ ]}
+];
+
+// ---------- state ----------
+const store = {
+  get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+let done = store.get("fk-done",{});
+function todayId(){
+  const t=new Date(); const s=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0");
+  const d=DAYS.find(x=>x.date===s); return d?d.id:null;
+}
+let visited = store.get("fk-visited",{});
+let mainOnly = store.get("fk-mainonly",false);
+const validView = h=>h==="check"||DAYS.some(d=>d.id===h);
+let current = validView(location.hash.slice(1)) ? location.hash.slice(1) : (todayId()||"day1");
+
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function hl(text,q){
+  const e=esc(text); if(!q) return e;
+  const re=new RegExp("("+q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","gi");
+  return e.replace(re,"<mark>$1</mark>");
+}
+const mapUrl = (p)=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.a);
+
+// ---------- render ----------
+function renderTabs(){
+  const tid=todayId();
+  $("#tabs").innerHTML = DAYS.map(d=>`<button class="tab ${d.id===current&&!$("#q").value?"on":""}" data-id="${d.id}"><b>${d.label}${d.id===tid?'<span class="today">오늘</span>':""}</b>${d.sub}</button>`).join("")
+    + `<button class="tab ${current==="check"&&!$("#q").value?"on":""}" data-id="check"><b>✅ 체크</b>가고 싶은 곳</button>`;
+  $("#tabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ $("#q").value=""; $("#clear").style.display="none"; current=b.dataset.id; try{history.replaceState(null,"","#"+current);}catch(err){} render(); window.scrollTo({top:0}); });
+}
+let openSet=new Set(); let closedCats=new Set(["__done"]);
+function fmt(t,q){ const i=t.indexOf(" - "); return i<0? hl(t,q) : hl(t.slice(0,i),q)+`<span class="nd"> - ${hl(t.slice(i+3),q)}</span>`; }
+function placeHTML(p,q){
+  return `<div class="place">
+    <div class="p-main">
+      <div class="pn">${fmt(p.n,q)}</div>
+      ${p.d?`<div class="pd">${hl(p.d,q)}</div>`:""}
+      <div class="addr">${hl(p.a,q)}</div>
+    </div>
+    <div class="ibtns">
+      <a class="ib map" href="${mapUrl(p)}" target="_blank" rel="noopener" aria-label="지도">🗺️</a>
+      <button class="ib" data-copy="${esc(p.a)}" aria-label="주소 복사">📋</button>
+      <button class="ib taxi" data-taxi-n="${esc(p.ja||p.n)}" data-taxi-a="${esc(p.a)}" aria-label="택시용 크게 보기">🚕</button>
+    </div></div>`;
+}
+function stopHTML(s,key,q,dayLabel){
+  const isDone=!!done[key];
+  const open = q || openSet.has(key);
+  const cnt = s.places.length;
+  const peek = s.move ? s.move.split("·")[0].replace(/^[^\s]+\s/,"") : (cnt? s.places.map(p=>p.n.replace(/\(.*?\)/g,"").trim()).slice(0,2).join(" · ") : "");
+  return `<div class="stop ${s.top?"top":""} ${s.sub?"sub":""} ${isDone?"done":""} ${open?"open":""}">
+    <div class="head" data-toggle="${key}">
+      <div class="hl">
+        <div class="time">${dayLabel?`<span class="result-day">${dayLabel}</span>`:""}${esc(s.time)}${s.st==="후보"?` <span class="st st-maybe">후보</span>`:""}</div>
+        ${s.heads.map(([k,t])=>`<div class="hline">${k?`<span class="kind ${KIND[k]||""}">${esc(k)}</span>`:""}<span class="htxt">${fmt(t,q)}</span></div>`).join("")}
+      </div>
+      <button class="chk" data-key="${key}" aria-label="완료">${isDone?"✓":""}</button>
+      <span class="chev">${open?"▴":"▾"}</span>
+    </div>
+    <div class="body">
+      ${s.move?`<div class="move">${hl(s.move,q)}</div>`:""}
+      ${s.notes.length?`<ul class="notes">${s.notes.map(n=>`<li>${hl(n,q)}</li>`).join("")}</ul>`:""}
+      ${s.places.map(p=>placeHTML(p,q)).join("")}
+      ${s.alts?`<div class="alt-h">🔄 못 가면 근처 대안</div>`+s.alts.map(p=>placeHTML(p,q)).join(""):""}
+    </div>
+  </div>`;
+}
+function hotelHTML(){
+  return `<div class="hotel"><div class="h-txt"><b>🏨 숙소</b> ${HOTEL.ko}</div>
+   <div class="ibtns">
+    <a class="ib map" href="${mapUrl({a:HOTEL.addr})}" target="_blank" rel="noopener" aria-label="지도">🗺️</a>
+    <button class="ib taxi" data-taxi-n="${HOTEL.name}" data-taxi-a="${HOTEL.addr}" aria-label="택시용">🚕</button>
+   </div></div>`;
+}
+function checkItemHTML(it,catName){
+  const v=!!visited[it.id];
+  return `<div class="ci ${v?"v":""}">
+    <button class="vchk" data-vid="${it.id}" aria-label="다녀옴">${v?"✓":""}</button>
+    <div class="ci-body">
+      <div class="ci-n">${fmt(it.n,"")}</div>
+      ${it.d?`<div class="ci-d">${esc(it.d)}</div>`:""}
+    </div>
+    <a class="ib map" href="${mapUrl(it)}" target="_blank" rel="noopener" aria-label="지도">🗺️</a>
+  </div>`;
+}
+function checkHTML(){
+  const all=CHECK.flatMap(c=>c.items); const n=all.filter(i=>visited[i.id]).length;
+  const pct=Math.round(n/all.length*100);
+  let h=`<div class="day-head">✅ 가고 싶은 곳 체크리스트</div>
+   <div class="bar"><div style="width:${pct}%"></div></div>
+   <div class="progress">다녀온 곳 ${n} / ${all.length} · 묶음 제목을 누르면 접혀요</div>
+   <div class="sec-h">🔜 아직 못 간 곳</div>`;
+  let left=0;
+  CHECK.forEach(c=>{
+    const rest=c.items.filter(i=>!visited[i.id]); left+=rest.length;
+    if(rest.length){ const cl=closedCats.has(c.cat); h+=`<div class="cat-h" data-cat="${esc(c.cat)}">${c.cat} <span>${rest.length}</span><i>${cl?"▾":"▴"}</i></div>`+(cl?"":rest.map(i=>checkItemHTML(i,c.cat)).join("")); }
+  });
+  if(!left) h+=`<div class="empty">🎉 전부 다녀왔어요!</div>`;
+  const doneList=[]; CHECK.forEach(c=>c.items.forEach(i=>{ if(visited[i.id]) doneList.push([visited[i.id],checkItemHTML(i,c.cat)]); }));
+  doneList.sort((a,b)=>b[0]-a[0]);
+  const dc=closedCats.has("__done");
+  h+=`<div class="sec-h done-h" data-cat="__done">✔️ 다녀온 곳 ${doneList.length} <i>${dc?"▾ 펼치기":"▴ 접기"}</i></div>` + (dc?"":(doneList.map(x=>x[1]).join("")||`<div class="empty" style="padding:16px 0">아직 없어요 · 다녀오면 체크!</div>`));
+
+  return h;
+}
+function render(){
+  renderTabs();
+  const q=$("#q").value.trim();
+  let html="";
+  if(q){
+    const ql=q.toLowerCase(); let hits=[];
+    DAYS.forEach(d=>d.stops.forEach((s,i)=>{
+      const blob=[...s.heads.flat(),...(s.alts||[]).flatMap(p=>[p.n,p.d||""]),s.title,s.move||"",...s.notes,...s.places.flatMap(p=>[p.n,p.a,p.d||"",p.ja||""])].join(" ").toLowerCase();
+      if(blob.includes(ql)) hits.push(stopHTML(s,d.id+"-"+i,q,d.label));
+    }));
+    html = `<div class="progress">"${esc(q)}" 검색 결과 ${hits.length}개</div>` + (hits.join("")||`<div class="empty">찾는 게 없어요 🥲<br>다른 단어로 검색해 보세요</div>`);
+  } else if(current==="check"){
+    html = checkHTML();
+  } else {
+    const d=DAYS.find(x=>x.id===current);
+    const mains=d.stops.map((s,i)=>[s,i]).filter(([s])=>!s.sub); const total=mains.length, n=mains.filter(([s,i])=>done[d.id+"-"+i]).length;
+    const allOpen=d.stops.every((s,i)=>(mainOnly&&s.sub)||openSet.has(d.id+"-"+i));
+    html = hotelHTML() + `
+      <div class="toolbar"><span class="progress">${n}/${total} 완료</span>
+      <span><button class="chip" id="mo">${mainOnly?"서브 보기":"메인만"}</button>
+      <button class="chip" id="ea" data-day="${d.id}">${allOpen?"모두 접기":"모두 펼치기"}</button></span></div>`
+      + d.stops.map((s,i)=>(mainOnly&&s.sub)?"":stopHTML(s,d.id+"-"+i,"")).join("")
+      + `<div class="tip">카드를 누르면 펼쳐져요 · 🗺️ 지도 · 📋 주소 복사 · 🚕 택시 기사님께 보여주기</div>`;
+  }
+  $("#main").innerHTML=html;
+}
+
+// ---------- events ----------
+let tt;
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1500);}
+document.addEventListener("click",async e=>{
+  const c=e.target.closest("[data-copy]");
+  if(c){ try{await navigator.clipboard.writeText(c.dataset.copy);toast("주소 복사됨 ✓");}catch(err){toast("복사가 막혔어요 — 주소를 길게 눌러 복사하세요");} return; }
+  const t=e.target.closest("[data-taxi-a]");
+  if(t){ $("#ov-name").textContent=t.dataset.taxiN; $("#ov-addr").textContent=t.dataset.taxiA; $("#overlay").classList.add("on"); return; }
+  const ea=e.target.closest("#ea");
+  if(ea){ const d=DAYS.find(x=>x.id===ea.dataset.day); const keys=d.stops.map((s,i)=>d.id+"-"+i);
+    const all=keys.every((k,i)=>(mainOnly&&d.stops[i].sub)||openSet.has(k)); keys.forEach(k=>all?openSet.delete(k):openSet.add(k)); render(); return; }
+  const tg=e.target.closest("[data-toggle]");
+  if(tg && !e.target.closest(".chk")){ const k=tg.dataset.toggle; openSet.has(k)?openSet.delete(k):openSet.add(k); render(); return; }
+  const ch=e.target.closest("[data-cat]");
+  if(ch){ const c=ch.dataset.cat; closedCats.has(c)?closedCats.delete(c):closedCats.add(c); render(); return; }
+  if(e.target.closest("#mo")){ mainOnly=!mainOnly; store.set("fk-mainonly",mainOnly); render(); return; }
+  const v=e.target.closest(".vchk");
+  if(v){ const id=v.dataset.vid; if(visited[id]) delete visited[id]; else visited[id]=Date.now(); store.set("fk-visited",visited); render(); if(visited[id]) toast("다녀온 곳으로 옮겼어요 ✓"); return; }
+  const k=e.target.closest(".chk");
+  if(k){ const key=k.dataset.key; if(done[key]) delete done[key]; else done[key]=1; store.set("fk-done",done); render(); return; }
+});
+$("#ov-close").onclick=()=>$("#overlay").classList.remove("on");
+$("#q").addEventListener("input",()=>{ $("#clear").style.display=$("#q").value?"block":"none"; render(); });
+$("#clear").onclick=()=>{ $("#q").value=""; $("#clear").style.display="none"; render(); $("#q").focus(); };
+window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(validView(h)){current=h;render();} });
+render();
+</script>
+</body>
+</html>
