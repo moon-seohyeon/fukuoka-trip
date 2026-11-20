@@ -774,7 +774,14 @@ render();
 <script type="module">
 // ===== 체크 공유 (Firebase Firestore) =====
 // 아래 설정값만 채우면 엄마 폰·보미 폰 체크가 실시간으로 같이 보여요.
-const firebaseConfig = null; /*__FIREBASE_CONFIG__*/
+const firebaseConfig = {
+  apiKey: "AIzaSyA5nNZcgxr342sdA3yQ7e7S2gK_MEYH8Kw",
+  authDomain: "planner-bomi.firebaseapp.com",
+  projectId: "planner-bomi",
+  storageBucket: "planner-bomi.firebasestorage.app",
+  messagingSenderId: "527558878394",
+  appId: "1:527558878394:web:075f6bee9178d927590e83"
+};
 const syncEl=document.getElementById("sync");
 const setSync=(t,ok)=>{ if(syncEl){ syncEl.textContent=t; syncEl.className="sync"+(ok?" ok":""); } };
 if(firebaseConfig){
