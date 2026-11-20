@@ -159,12 +159,27 @@ ul.notes{margin:4px 0 4px;font-size:.93rem}
 .st-ok{background:#e3efdc;color:#4f6b43}
 .st-maybe{background:#eee;color:#888}
 .alt-h{margin-top:14px;padding-top:10px;border-top:2px dashed var(--line);font-weight:700;font-size:.9rem;color:var(--sub)}
+.sync{display:inline-block;margin-top:6px;font-size:.8rem;color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:8px;padding:2px 9px}
+.sync.ok{color:#4f6b43;background:#e3efdc;border-color:#cfe2c4}
+.wx{background:linear-gradient(135deg,#eaf3fb,#fffdf8);border:1px solid #d6e6f3;border-radius:16px;padding:12px 14px;margin-bottom:14px}
+.wx-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:1.05rem}
+.wxc{border:1px solid #cfe0ef;background:#fff;border-radius:8px;padding:2px 8px;font-size:.78rem;margin-left:4px;color:#3b6a96;font-family:inherit;cursor:pointer}
+.wxc.on{background:#3b6a96;color:#fff;border-color:#3b6a96}
+.wx-sub,.wx-msg{font-size:.85rem;color:var(--sub);margin-top:2px}
+.wx-day{font-size:.88rem;margin-top:6px;font-weight:600}
+.wx-strip{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.wx-h{flex:none;width:52px;text-align:center;background:#fff;border:1px solid #e3edf6;border-radius:10px;padding:5px 0;font-size:.78rem;color:var(--sub)}
+.wx-h .e{font-size:1.2rem;line-height:1.4}
+.wx-h .t{font-weight:800;color:var(--ink);font-size:.95rem}
+.wx-h .p.hi{color:#2c6fb3;font-weight:700}
+.wx-warn{margin-top:8px;font-size:.88rem;font-weight:700;color:#2c6fb3}
 </style>
 </head>
 <body>
 <header>
   <h1>🍜 후쿠오카 여행 일정</h1>
   <div class="subtitle">2026.11.21(토) ~ 11.23(월·공휴일) · 하카타 · 텐진 · 유후인</div>
+  <div class="sync" id="sync">📱 체크는 이 폰에만 저장 중</div>
 </header>
 
 <div class="sticky"><div class="sticky-in">
@@ -657,6 +672,44 @@ function checkHTML(){
 
   return h;
 }
+
+// ===== 날씨 (Open-Meteo · 키 없음) =====
+const WXLOC={fukuoka:{name:"후쿠오카",lat:33.59,lon:130.40},yufuin:{name:"유후인",lat:33.265,lon:131.36}};
+const DAYLOC={day1:"fukuoka",day2:"yufuin",day3:"fukuoka"};
+let wx=store.get("fk-wx",{}); let wxPick={};
+const WXC=c=>c===0?["☀️","맑음"]:c<=2?["🌤️","구름 조금"]:c===3?["☁️","흐림"]:c<=48?["🌫️","안개"]:c<=57?["🌦️","이슬비"]:c<=67?["🌧️","비"]:c<=77?["🌨️","눈"]:c<=82?["🌧️","소나기"]:c<=86?["🌨️","눈 소나기"]:["⛈️","뇌우"];
+async function loadWx(){
+  for(const [k,l] of Object.entries(WXLOC)){
+    try{
+      const u=`https://api.open-meteo.com/v1/forecast?latitude=${l.lat}&longitude=${l.lon}&current=temperature_2m,apparent_temperature,weather_code,precipitation&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FTokyo&forecast_days=7`;
+      const r=await fetch(u); if(!r.ok) throw 0; const j=await r.json(); j.fetched=Date.now(); wx[k]=j;
+    }catch(e){}
+  }
+  store.set("fk-wx",wx); if(!$("#q").value && current!=="check") render();
+}
+function wxHTML(d){
+  const key=wxPick[d.id]||DAYLOC[d.id]; const w=wx[key]; const L=WXLOC[key];
+  const chips=Object.entries(WXLOC).map(([k,l])=>`<button class="wxc ${k===key?"on":""}" data-wx="${d.id}|${k}">${l.name}</button>`).join("");
+  if(!w||!w.hourly) return `<div class="wx"><div class="wx-top"><b>🌡️ 날씨</b><span>${chips}</span></div><div class="wx-msg">날씨를 불러오는 중이에요… (인터넷 연결 필요)</div></div>`;
+  const nowT=w.current.time; const today=nowT.slice(0,10);
+  const H=w.hourly.time.map((t,i)=>({t,tp:Math.round(w.hourly.temperature_2m[i]),p:w.hourly.precipitation_probability[i]??0,c:w.hourly.weather_code[i]}));
+  let hrs; const isToday=d.date===today;
+  if(isToday){ const i0=H.findIndex(x=>x.t>=nowT.slice(0,13)+":00"); hrs=H.slice(Math.max(0,i0),i0+12); }
+  else hrs=H.filter(x=>x.t.startsWith(d.date)&&+x.t.slice(11,13)>=6);
+  const di=w.daily.time.indexOf(d.date);
+  const day=di>=0?`<div class="wx-day">${d.sub} ${WXC(w.daily.weather_code[di])[0]} 최저 ${Math.round(w.daily.temperature_2m_min[di])}° / 최고 ${Math.round(w.daily.temperature_2m_max[di])}° · 비 확률 최대 ${w.daily.precipitation_probability_max[di]??0}%</div>`:"";
+  const cur=WXC(w.current.weather_code);
+  const rain=hrs.some(x=>x.p>=50)?`<div class="wx-warn">☔ 비 올 확률이 높은 시간이 있어요 → 우산 챙기기!</div>`:"";
+  const age=Math.round((Date.now()-(w.fetched||0))/60000);
+  return `<div class="wx">
+    <div class="wx-top"><b>${cur[0]} ${L.name} 지금 ${Math.round(w.current.temperature_2m)}°</b><span>${chips}</span></div>
+    <div class="wx-sub">${cur[1]} · 체감 ${Math.round(w.current.apparent_temperature)}° · ${age<2?"방금":age+"분 전"} 업데이트</div>
+    ${day}
+    ${hrs.length?`<div class="wx-strip">${hrs.map(x=>`<div class="wx-h"><div>${+x.t.slice(11,13)}시</div><div class="e">${WXC(x.c)[0]}</div><div class="t">${x.tp}°</div><div class="p ${x.p>=40?"hi":""}">💧${x.p}%</div></div>`).join("")}</div>`:`<div class="wx-msg">이 날짜 예보는 아직 안 나왔어요</div>`}
+    ${rain}
+  </div>`;
+}
+loadWx(); setInterval(loadWx,30*60*1000);
 function render(){
   renderTabs();
   const q=$("#q").value.trim();
@@ -674,7 +727,7 @@ function render(){
     const d=DAYS.find(x=>x.id===current);
     const mains=d.stops.map((s,i)=>[s,i]).filter(([s])=>!s.sub); const total=mains.length, n=mains.filter(([s,i])=>done[d.id+"-"+i]).length;
     const allOpen=d.stops.every((s,i)=>(mainOnly&&s.sub)||openSet.has(d.id+"-"+i));
-    html = hotelHTML() + `
+    html = hotelHTML() + wxHTML(d) + `
       <div class="toolbar"><span class="progress">${n}/${total} 완료</span>
       <span><button class="chip" id="mo">${mainOnly?"서브 보기":"메인만"}</button>
       <button class="chip" id="ea" data-day="${d.id}">${allOpen?"모두 접기":"모두 펼치기"}</button></span></div>`
@@ -692,6 +745,8 @@ document.addEventListener("click",async e=>{
   if(c){ try{await navigator.clipboard.writeText(c.dataset.copy);toast("주소 복사됨 ✓");}catch(err){toast("복사가 막혔어요 — 주소를 길게 눌러 복사하세요");} return; }
   const t=e.target.closest("[data-taxi-a]");
   if(t){ $("#ov-name").textContent=t.dataset.taxiN; $("#ov-addr").textContent=t.dataset.taxiA; $("#overlay").classList.add("on"); return; }
+  const wb=e.target.closest("[data-wx]");
+  if(wb){ const [dd,k]=wb.dataset.wx.split("|"); wxPick[dd]=k; render(); return; }
   const ea=e.target.closest("#ea");
   if(ea){ const d=DAYS.find(x=>x.id===ea.dataset.day); const keys=d.stops.map((s,i)=>d.id+"-"+i);
     const all=keys.every((k,i)=>(mainOnly&&d.stops[i].sub)||openSet.has(k)); keys.forEach(k=>all?openSet.delete(k):openSet.add(k)); render(); return; }
@@ -701,15 +756,57 @@ document.addEventListener("click",async e=>{
   if(ch){ const c=ch.dataset.cat; closedCats.has(c)?closedCats.delete(c):closedCats.add(c); render(); return; }
   if(e.target.closest("#mo")){ mainOnly=!mainOnly; store.set("fk-mainonly",mainOnly); render(); return; }
   const v=e.target.closest(".vchk");
-  if(v){ const id=v.dataset.vid; if(visited[id]) delete visited[id]; else visited[id]=Date.now(); store.set("fk-visited",visited); render(); if(visited[id]) toast("다녀온 곳으로 옮겼어요 ✓"); return; }
+  if(v){ const id=v.dataset.vid; if(visited[id]) delete visited[id]; else visited[id]=Date.now(); store.set("fk-visited",visited); window.fkPush&&fkPush("visited",id,visited[id]||null); render(); if(visited[id]) toast("다녀온 곳으로 옮겼어요 ✓"); return; }
   const k=e.target.closest(".chk");
-  if(k){ const key=k.dataset.key; if(done[key]) delete done[key]; else done[key]=1; store.set("fk-done",done); render(); return; }
+  if(k){ const key=k.dataset.key; if(done[key]) delete done[key]; else done[key]=1; store.set("fk-done",done); window.fkPush&&fkPush("done",key,done[key]||null); render(); return; }
 });
 $("#ov-close").onclick=()=>$("#overlay").classList.remove("on");
 $("#q").addEventListener("input",()=>{ $("#clear").style.display=$("#q").value?"block":"none"; render(); });
 $("#clear").onclick=()=>{ $("#q").value=""; $("#clear").style.display="none"; render(); $("#q").focus(); };
 window.addEventListener("hashchange",()=>{ const h=location.hash.slice(1); if(validView(h)){current=h;render();} });
+window.fkApply=function(data){
+  done=(data&&data.done)||{}; visited=(data&&data.visited)||{};
+  store.set("fk-done",done); store.set("fk-visited",visited); render();
+};
+window.fkLocal=function(){ return {done:done, visited:visited}; };
 render();
+</script>
+<script type="module">
+// ===== 체크 공유 (Firebase Firestore) =====
+// 아래 설정값만 채우면 엄마 폰·보미 폰 체크가 실시간으로 같이 보여요.
+const firebaseConfig = null; /*__FIREBASE_CONFIG__*/
+const syncEl=document.getElementById("sync");
+const setSync=(t,ok)=>{ if(syncEl){ syncEl.textContent=t; syncEl.className="sync"+(ok?" ok":""); } };
+if(firebaseConfig){
+  try{
+    const V="10.12.2";
+    const {initializeApp}=await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+    const fs=await import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`);
+    const app=initializeApp(firebaseConfig);
+    const db=fs.getFirestore(app);
+    const ref=fs.doc(db,"trips","fukuoka-2026-11");
+    setSync("☁️ 연결 중…",false);
+    let first=true;
+    fs.onSnapshot(ref,(snap)=>{
+      if(!snap.exists()){
+        fs.setDoc(ref,window.fkLocal()).catch(()=>setSync("⚠️ 저장 실패 · 이 폰에만 저장 중",false));
+      }else{
+        const d=snap.data();
+        if(first){ // 처음 연결할 때 이 폰에만 있던 체크도 합치기
+          const loc=window.fkLocal(); const merged={done:{...loc.done,...(d.done||{})},visited:{...loc.visited,...(d.visited||{})}};
+          window.fkApply(merged);
+          if(JSON.stringify(merged)!==JSON.stringify({done:d.done||{},visited:d.visited||{}})) fs.setDoc(ref,merged,{merge:true});
+        }else window.fkApply(d);
+      }
+      first=false;
+      setSync("☁️ 체크가 엄마 폰과 같이 저장돼요",true);
+    },()=>setSync("⚠️ 연결 실패 · 이 폰에만 저장 중",false));
+    window.fkPush=(kind,key,val)=>{
+      const fp=new fs.FieldPath(kind,key);
+      fs.updateDoc(ref,fp,val===null?fs.deleteField():val).catch(()=>setSync("⚠️ 저장 실패 · 인터넷 확인",false));
+    };
+  }catch(e){ setSync("⚠️ 연결 실패 · 이 폰에만 저장 중",false); }
+}
 </script>
 </body>
 </html>
