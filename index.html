@@ -173,17 +173,18 @@ ul.notes{margin:4px 0 4px;font-size:.93rem}
 .wx-h .t{font-weight:800;color:var(--ink);font-size:.95rem}
 .wx-h .p.hi{color:#2c6fb3;font-weight:700}
 .wx-warn{margin-top:8px;font-size:.88rem;font-weight:700;color:#2c6fb3}
+.nd{display:block;font-size:.85em;font-weight:500;color:var(--sub);margin-top:1px;line-height:1.35}
+.htxt{display:block}
+.sticky{padding-top:max(10px,env(safe-area-inset-top))}
+.sync{display:block;margin:0 0 8px;background:#fff1c9;border:1px solid #f0d98a;color:#7a5a00;border-radius:10px;padding:5px 10px;font-size:.82rem}
+.sync[hidden]{display:none}
 </style>
 </head>
 <body>
-<header>
-  <h1>🍜 후쿠오카 여행 일정</h1>
-  <div class="subtitle">2026.11.21(토) ~ 11.23(월·공휴일) · 하카타 · 텐진 · 유후인</div>
-  <div class="sync" id="sync">📱 체크는 이 폰에만 저장 중</div>
-</header>
 
 <div class="sticky"><div class="sticky-in">
-  <div class="search">🔍<input id="q" type="search" placeholder="장소·가게·주소 검색 (예: 치이카와, 라멘, 락커)" autocomplete="off"><button id="clear" aria-label="지우기">✕</button></div>
+  <div class="sync" id="sync" hidden></div>
+  <div class="search">🔍<input id="q" type="search" placeholder="검색" autocomplete="off"><button id="clear" aria-label="지우기">✕</button></div>
   <div class="tabs" id="tabs"></div>
 </div></div>
 
@@ -598,7 +599,7 @@ function renderTabs(){
   $("#tabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ $("#q").value=""; $("#clear").style.display="none"; current=b.dataset.id; try{history.replaceState(null,"","#"+current);}catch(err){} render(); window.scrollTo({top:0}); });
 }
 let openSet=new Set(); let closedCats=new Set(["__done"]);
-function fmt(t,q){ const i=t.indexOf(" - "); return i<0? hl(t,q) : hl(t.slice(0,i),q)+`<span class="nd"> - ${hl(t.slice(i+3),q)}</span>`; }
+function fmt(t,q){ const i=t.indexOf(" - "); return i<0? hl(t,q) : hl(t.slice(0,i),q)+`<span class="nd">${hl(t.slice(i+3),q)}</span>`; }
 function placeHTML(p,q){
   return `<div class="place">
     <div class="p-main">
@@ -783,7 +784,7 @@ const firebaseConfig = {
   appId: "1:527558878394:web:075f6bee9178d927590e83"
 };
 const syncEl=document.getElementById("sync");
-const setSync=(t,ok)=>{ if(syncEl){ syncEl.textContent=t; syncEl.className="sync"+(ok?" ok":""); } };
+const setSync=(t,ok)=>{ if(syncEl){ syncEl.textContent=t; syncEl.hidden=!t.startsWith("⚠️"); } };
 if(firebaseConfig){
   try{
     const V="10.12.2";
